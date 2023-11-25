@@ -13,8 +13,8 @@ public class courseform {
     private List<String> schedule_day;//
     private List<String>  schedule_time;//
     private List<String>  schedule_room;//
-    private List<String>  schedule_building;
-    private Integer prereq;//
+    private List<String>  schedule_building;//
+    private String prereq;//
     private Integer capacity;//
     private Integer credits;//
     private Integer facID;   //at the end

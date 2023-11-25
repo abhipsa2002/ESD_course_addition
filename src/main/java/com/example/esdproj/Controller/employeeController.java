@@ -15,13 +15,13 @@ public class employeeController{
     @Autowired
     employeeService employeeService;
 
-    @PostMapping("/addemployee")
+    @PostMapping("/add_employee")
     public ResponseEntity<String> addEmployee(@RequestBody employee employee) {
         employeeService.addEmployee(employee);
         if (employeeService.addEmployee(employee)) {
-            return ResponseEntity.ok("Login successful");
+            return ResponseEntity.ok("Added successfully");
         } else {
-            return ResponseEntity.status(401).body("Login failed");
+            return ResponseEntity.status(401).body("Failed to add");
         }
     }
 

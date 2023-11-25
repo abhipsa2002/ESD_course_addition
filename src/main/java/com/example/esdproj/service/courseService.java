@@ -32,46 +32,61 @@ public class courseService {
     private specializationRepo specializationRepo;
 
     @Transactional
-    public void saveCourse(courseform courseform) {
+    public boolean saveCourse(courseform courseform) {
         // Create entities and populate data
-        course course = new course();
-        course.setCourseCode(courseform.getCode());
-        course.setName(courseform.getName());
-        course.setTerm(courseform.getTerm());
-        course.setYear(courseform.getYear());
-        course.setCapacity(courseform.getCapacity());
-        course.setCredits(courseform.getCredits());
-        course.setPrereq(courseform.getPrereq());
+        try {
+            course course = new course();
+            course.setCourseCode(courseform.getCode());
+            course.setName(courseform.getName());
+            course.setTerm(courseform.getTerm());
+            course.setYear(courseform.getYear());
+            course.setCapacity(courseform.getCapacity());
+            course.setCredits(courseform.getCredits());
 
 
+            //pre-req id at the course table
+            course pre = new course();
+            Optional<course> prereqCourseOptional = Optional.ofNullable(courseRepo.findByName(courseform.getPrereq()));
 
-        //mapping employee to the course table
-        Integer employeeId = courseform.getFacID();
-        Optional<employee> optionalEmployee = employeeRepo.findById(employeeId);
+            if (prereqCourseOptional.isPresent()) {
+                course prereqCourse = prereqCourseOptional.get();
+                Integer prereqCourseId = prereqCourse.getCourseId();
+                course.setPrereq(prereqCourseId);
+            }
 
-        if (optionalEmployee.isPresent()) {
-            // Employee found
-            employee emp = optionalEmployee.get();
-            course.setFaculty(emp);
+            //mapping employee to the course table
+            Integer employeeId = courseform.getFacID();
+            Optional<employee> optionalEmployee = employeeRepo.findById(employeeId);
+
+            if (optionalEmployee.isPresent()) {
+                // Employee found
+                employee emp = optionalEmployee.get();
+                course.setFaculty(emp);
+            }
+
+            String spcl = courseform.getSpecialization();
+            Optional<specialization> optionalSpecialization = Optional.ofNullable(specializationRepo.findByName(spcl));
+            if (optionalSpecialization.isPresent()) {
+                specialization sp = optionalSpecialization.get();
+                course.setSpecialization(sp);
+
+            }
+            courseRepo.save(course);
+            for (int i = 0; i < courseform.getSchedule_day().size(); i++) {
+                schedule schedule = new schedule();
+                schedule.setTime(courseform.getSchedule_time().get(i));
+                schedule.setRoom(courseform.getSchedule_room().get(i));
+                schedule.setDay(courseform.getSchedule_day().get(i));
+                schedule.setBuilding(courseform.getSchedule_building().get(i));
+                schedule.setCourse(course);
+                scheduleRepo.save(schedule);
+            }
+            return true;
+        } catch (Exception e) {
+            // If an exception occurs (e.g., DataAccessException), return false
+            return false;
         }
 
-        String spcl = courseform.getSpecialization();
-        Optional<specialization> optionalSpecialization = Optional.ofNullable(specializationRepo.findByName(spcl));
-        if(optionalSpecialization.isPresent()){
-            specialization sp = optionalSpecialization.get();
-            course.setSpecialization(sp);
-
-        }
-        courseRepo.save(course);
-        for (int i = 0; i < courseform.getSchedule_day().size(); i++)  {
-            schedule schedule = new schedule();
-            schedule.setTime(courseform.getSchedule_time().get(i));
-            schedule.setRoom(courseform.getSchedule_room().get(i));
-            schedule.setDay(courseform.getSchedule_day().get(i));
-            schedule.setBuilding(courseform.getSchedule_building().get(i));
-            schedule.setCourse(course);
-            scheduleRepo.save(schedule);
-        }
     }
 
     public List<String> getAllCourseNames() {

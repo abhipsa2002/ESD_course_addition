@@ -18,14 +18,16 @@ public class courseController {
     public List<String> getCourses() {
         List<String> courses;
         return courses = courseService.getAllCourseNames();
-
     }
 
     @PostMapping("/add_course")
-    public ResponseEntity<String> addCourse(@RequestBody  courseform dto)
-    {
-        courseService.saveCourse(dto);
-        return ResponseEntity.ok("Added Successfully");
+    public ResponseEntity<String> addCourse(@RequestBody courseform c) {
+
+        if (courseService.saveCourse(c)) {
+            return ResponseEntity.ok("Added successfully");
+        } else {
+            return ResponseEntity.status(401).body("Failed to add the course");
+        }
     }
 
 
