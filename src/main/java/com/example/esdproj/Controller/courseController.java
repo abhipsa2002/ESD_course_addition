@@ -1,8 +1,10 @@
 package com.example.esdproj.Controller;
 
 import com.example.esdproj.DTO.courseform;
+import com.example.esdproj.Entity.course;
 import com.example.esdproj.service.courseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +18,14 @@ public class courseController {
      courseService courseService;
 
     @GetMapping("/get_pre")
-    public List<String> getCourses() {
-        List<String> courses;
-        return courses = courseService.getAllCourseNames();
+    public ResponseEntity<List<course>> getcourse() {
+        List<course> courses = courseService.getCourses();
+
+        if (courses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(courses, HttpStatus.OK);
+        }
     }
 
     @PostMapping("/add_course")

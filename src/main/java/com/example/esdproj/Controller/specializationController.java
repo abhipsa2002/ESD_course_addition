@@ -1,6 +1,7 @@
 package com.example.esdproj.Controller;
 
 
+import com.example.esdproj.Entity.specialization;
 import com.example.esdproj.service.specializationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,15 @@ public class specializationController {
     specializationService specializationService;
 
     @GetMapping("/get_special")
-    public ResponseEntity<List<String>> getAllSpecialization() {
-        List<String> specializations = specializationService.getAllSpeclNames();
+    public ResponseEntity<List<specialization>> getSpecializations() {
+        List<specialization> specializations = specializationService.getAllSpecializations();
+
+        if (specializations.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(specializations);
     }
+
 
 
 

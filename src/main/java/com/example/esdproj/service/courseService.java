@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class courseService {
@@ -42,16 +41,25 @@ public class courseService {
             course.setYear(courseform.getYear());
             course.setCapacity(courseform.getCapacity());
             course.setCredits(courseform.getCredits());
+//
+//            if (courseform.getPrereq() != null && courseform.getPrereq() == -1) {
+//                course.setPrereq(null);
+//            }
+//            assert courseform.getPrereq() != null;
+//            Optional<course> prereqCourseOptional = courseRepo.findById(courseform.getPrereq());
+//
+//            if (prereqCourseOptional.isPresent()) {
+//                course.setPrereq(courseform.getPrereq());
+//            }
 
+            if (courseform.getPrereq() != null && courseform.getPrereq() == -1) {
+                course.setPrereq(null);
+            } else if (courseform.getPrereq() != null) {
+                Optional<course> prereqCourseOptional = courseRepo.findById(courseform.getPrereq());
 
-            //pre-req id at the course table
-            course pre = new course();
-            Optional<course> prereqCourseOptional = Optional.ofNullable(courseRepo.findByName(courseform.getPrereq()));
-
-            if (prereqCourseOptional.isPresent()) {
-                course prereqCourse = prereqCourseOptional.get();
-                Integer prereqCourseId = prereqCourse.getCourseId();
-                course.setPrereq(prereqCourseId);
+                if (prereqCourseOptional.isPresent()) {
+                    course.setPrereq(courseform.getPrereq());
+                }
             }
 
             //mapping employee to the course table
@@ -64,12 +72,10 @@ public class courseService {
                 course.setFaculty(emp);
             }
 
-            String spcl = courseform.getSpecialization();
-            Optional<specialization> optionalSpecialization = Optional.ofNullable(specializationRepo.findByName(spcl));
+            Optional<specialization> optionalSpecialization = specializationRepo.findById(courseform.getSpecialization()) ;
             if (optionalSpecialization.isPresent()) {
                 specialization sp = optionalSpecialization.get();
                 course.setSpecialization(sp);
-
             }
             courseRepo.save(course);
             for (int i = 0; i < courseform.getSchedule_day().size(); i++) {
@@ -77,7 +83,11 @@ public class courseService {
                 schedule.setTime(courseform.getSchedule_time().get(i));
                 schedule.setRoom(courseform.getSchedule_room().get(i));
                 schedule.setDay(courseform.getSchedule_day().get(i));
-                schedule.setBuilding(courseform.getSchedule_building().get(i));
+                //schedule.setBuilding(courseform.getSchedule_building().get(i));
+                String building = courseform.getSchedule_building().get(i);
+                if (building != null) {
+                    schedule.setBuilding(building);
+                }
                 schedule.setCourse(course);
                 scheduleRepo.save(schedule);
             }
@@ -89,10 +99,14 @@ public class courseService {
 
     }
 
-    public List<String> getAllCourseNames() {
-        List<course> courses = courseRepo.findAll();
-        return courses.stream()
-                .map(course::getName)
-                .collect(Collectors.toList());
+//    public List<String> getAllCourseNames() {
+//        List<course> courses = courseRepo.findAll();
+//        return courses.stream()
+//                .map(course::getName)
+//                .collect(Collectors.toList());
+//    }
+    public List<course> getCourses()
+    {
+        return courseRepo.findAll();
     }
 }

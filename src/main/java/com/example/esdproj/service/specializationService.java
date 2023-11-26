@@ -1,6 +1,5 @@
 package com.example.esdproj.service;
 
-import com.example.esdproj.Entity.course;
 import com.example.esdproj.Entity.specialization;
 import com.example.esdproj.Repositories.specializationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,4 +22,8 @@ public class specializationService {
                 .collect(Collectors.toList());
     }
 
+    public List<specialization> getAllSpecializations() {
+        return specializationRepo.findAll();
+
+    }
 }

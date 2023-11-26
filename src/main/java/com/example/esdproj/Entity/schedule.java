@@ -1,6 +1,7 @@
 package com.example.esdproj.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,9 +24,10 @@ public class schedule {
     private String day;
     @Column(name="room",nullable = false)
     private String room;
-    @Column(name="building")
+    @Column(name="building",nullable = false)
     private String building;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="course_id")
     private course course;

@@ -4,6 +4,9 @@ import com.example.esdproj.Entity.employee;
 import com.example.esdproj.Repositories.employeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class employeeService {
     @Autowired
@@ -30,5 +33,10 @@ public class employeeService {
             // If an exception occurs (e.g., DataAccessException), return false
             return false;
         }
+    }
+
+    public List<employee> getEmployees()
+    {
+        return employeeRepo.findAll();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.esdproj.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class specialization {
     @Column(name="name",nullable = false,unique = true)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "specialization")
     private List<course> courses;
 }

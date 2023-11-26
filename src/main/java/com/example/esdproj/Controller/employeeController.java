@@ -4,8 +4,11 @@ import com.example.esdproj.DTO.loginform;
 import com.example.esdproj.Entity.employee;
 import com.example.esdproj.service.employeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8080/")
 @RestController
@@ -28,7 +31,6 @@ public class employeeController{
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody loginform emp) {
-        // Assuming LoginRequest has userId and password fields
         String email = emp.getEmail();
         String enteredPassword = emp.getPassword();
 
@@ -38,4 +40,16 @@ public class employeeController{
             return ResponseEntity.status(401).body("Login failed");
         }
     }
+
+    @GetMapping("/get_employee")
+    public ResponseEntity<List<employee>> getemp() {
+        List<employee> emp = employeeService.getEmployees();
+
+        if (emp.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(emp, HttpStatus.OK);
+        }
+    }
+
 }

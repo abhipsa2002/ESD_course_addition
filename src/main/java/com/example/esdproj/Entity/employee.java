@@ -1,5 +1,6 @@
 package com.example.esdproj.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,6 +42,7 @@ public class employee {
     @Column(name = "department")
     private String department;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL)
     private List<course> courses;
 

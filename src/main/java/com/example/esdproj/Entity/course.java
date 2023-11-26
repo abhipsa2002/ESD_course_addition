@@ -1,5 +1,6 @@
 package com.example.esdproj.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,7 +62,7 @@ public class course {
 //    @JoinTable(name="Course_Specialization", joinColumns = {@JoinColumn(name="course_id")},
 //            inverseJoinColumns = {@JoinColumn(name = "specialization_id")})
 //    private List<specialization> specializationList;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private Set<schedule> schedules;
 
