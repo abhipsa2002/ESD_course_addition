@@ -37,6 +37,6 @@ public class employeeService {
 
     public List<employee> getEmployees()
     {
-        return employeeRepo.findAll();
+        return employeeRepo.findByDepartmentIn(List.of("cs", "ec"));
     }
 }
